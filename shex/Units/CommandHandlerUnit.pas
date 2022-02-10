@@ -54,12 +54,18 @@ var
   selfPath: string;
   sl: TStringList;
   I: Integer;
+  IsRecursivePath: Boolean;
 begin
   Result:=Result.Create(Result);
   sl:=TStringList.Create;
   try
     CmdLine:=CmdLine.Replace('"', '');
-    if CmdLine.contains('/?') then
+
+    if CmdLine.Contains('shex://shex://') then
+      IsRecursivePath:=True
+      else IsRecursivePath:=False;
+
+    if CmdLine.contains('?') and not IsRecursivePath then
     begin
       //? doesn't works
       //sl.QuoteChar:=#0;
@@ -72,9 +78,15 @@ begin
     end
     else
     begin
-      //Похоже, избыточный блок
       sl.Delimiter:=' ';
       sl.DelimitedText:=CmdLine;
+
+      if IsRecursivePath and (sl.Count>=2) then
+      begin
+        Result.IsLocateQuery:=False;
+        Result.Path:=sl[1].Substring('shex://'.Length);
+        Exit(Result);
+      end;
     end;
 
     if sl.Count<2 then
@@ -82,10 +94,12 @@ begin
 
     selfPath:=sl[0];
     Result.Path:=sl[1];
+
     for I := 2 to sl.Count-1 do
       Result.Params:=Result.Params+' '+sl[i];
 
-    Result.Path:=Result.Path.Substring('shex:\\'.Length);
+    Result.Path:=Result.Path.Substring('shex://'.Length);
+
     if Result.Path.EndsWith('/') then
       Result.Path:=copy(Result.Path, 0, Result.Path.Length-1);
 
@@ -114,6 +128,8 @@ end;
 constructor TParsedCmdLine.Create(inst: TParsedCmdLine);
 begin
   inherited;
+  Path:='';
+  Params:='';
   IsLocateQuery:=False;
 end;
 
