@@ -5,11 +5,15 @@ program shex;
 {$R *.res}
 
 uses
-  System.SysUtils;
+  System.SysUtils,
+  CommandHandlerUnit in 'Units\CommandHandlerUnit.pas';
 
+var
+  handler: ICommandHandler;
 begin
   try
-    { TODO -oUser -cConsole Main : Insert code here }
+    handler:=TCommandHandler.Create;
+    handler.Process(CmdLine);
   except
     on E: Exception do
       Writeln(E.ClassName, ': ', E.Message);
