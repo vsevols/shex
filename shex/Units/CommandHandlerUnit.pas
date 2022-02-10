@@ -13,6 +13,9 @@ type
   TParsedCmdLine = record
     Path: string;
     Params: string;
+    IsLocateQuery: Boolean;
+  public
+    constructor Create(inst: TParsedCmdLine);
   end;
 
   TCommandHandler = class(TInterfacedObject, ICommandHandler)
@@ -36,9 +39,9 @@ var
 begin
   parsed:=ParseCmdLine(CmdLine);
 
-  if parsed.Path.EndsWith('?') then
+  //if parsed.Path.EndsWith('?') then
+  if parsed.IsLocateQuery then
   begin
-    parsed.Path:=copy(parsed.Path, 1, parsed.Path.Length-1);
     tcLocate(parsed);
   end
   else
@@ -52,17 +55,24 @@ var
   sl: TStringList;
   I: Integer;
 begin
+  Result:=Result.Create(Result);
   sl:=TStringList.Create;
   try
+    CmdLine:=CmdLine.Replace('"', '');
     if CmdLine.contains('/?') then
     begin
+      //? doesn't works
+      //sl.QuoteChar:=#0;
       sl.Delimiter:='?';
       sl.DelimitedText:=CmdLine;
       if sl[1].EndsWith('/') then
         sl[1]:=sl[1].Substring(0, sl[1].Length-1);
+      if (sl.Count<3) or sl[2].IsEmpty then
+        Result.isLocateQuery:=True;
     end
     else
     begin
+      //Похоже, избыточный блок
       sl.Delimiter:=' ';
       sl.DelimitedText:=CmdLine;
     end;
@@ -92,6 +102,12 @@ begin
   parsed.Params:='/O /R='+parsed.Path.Replace('/', '\');
   parsed.Path:='E:\drbVsev\Dropbox\programs\totalcmd8\TOTALCMD.EXE';
   Shex(parsed);
+end;
+
+constructor TParsedCmdLine.Create(inst: TParsedCmdLine);
+begin
+  inherited;
+  IsLocateQuery:=False;
 end;
 
 end.

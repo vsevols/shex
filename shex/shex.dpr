@@ -13,11 +13,11 @@ var
 begin
   try
     WriteLn('received: '+CmdLine);
-    if False then
-      Sleep(MaxInt);
 
     handler:=TCommandHandler.Create;
     handler.Process(CmdLine);
+    if False then
+      Sleep(MaxInt);
   except
     on E: Exception do
     begin
