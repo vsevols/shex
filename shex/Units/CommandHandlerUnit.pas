@@ -35,6 +35,7 @@ var
   parsed: TParsedCmdLine;
 begin
   parsed:=ParseCmdLine(CmdLine);
+
   if parsed.Path.EndsWith('?') then
   begin
     parsed.Path:=copy(parsed.Path, 1, parsed.Path.Length-1);
@@ -53,8 +54,19 @@ var
 begin
   sl:=TStringList.Create;
   try
-    sl.Delimiter:=' ';
-    sl.DelimitedText:=CmdLine;
+    if CmdLine.contains('/?') then
+    begin
+      sl.Delimiter:='?';
+      sl.DelimitedText:=CmdLine;
+      if sl[1].EndsWith('/') then
+        sl[1]:=sl[1].Substring(0, sl[1].Length-1);
+    end
+    else
+    begin
+      sl.Delimiter:=' ';
+      sl.DelimitedText:=CmdLine;
+    end;
+
     if sl.Count<2 then
       raise Exception.Create('no params in CmdLine');
 

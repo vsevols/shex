@@ -13,6 +13,9 @@ var
 begin
   try
     WriteLn('received: '+CmdLine);
+    if False then
+      Sleep(MaxInt);
+
     handler:=TCommandHandler.Create;
     handler.Process(CmdLine);
   except
