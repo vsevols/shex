@@ -16,8 +16,8 @@ begin
 
     handler:=TCommandHandler.Create;
     handler.Process(CmdLine);
-    if False then
-      Sleep(MaxInt);
+//    if False then
+      ReadLn;
   except
     on E: Exception do
     begin

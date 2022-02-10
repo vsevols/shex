@@ -65,8 +65,8 @@ begin
       //sl.QuoteChar:=#0;
       sl.Delimiter:='?';
       sl.DelimitedText:=CmdLine;
-      if sl[1].EndsWith('/') then
-        sl[1]:=sl[1].Substring(0, sl[1].Length-1);
+      //if sl[1].EndsWith('/') then
+        //sl[1]:=sl[1].Substring(0, sl[1].Length-1);
       if (sl.Count<3) or sl[2].IsEmpty then
         Result.isLocateQuery:=True;
     end
@@ -85,7 +85,10 @@ begin
     for I := 2 to sl.Count-1 do
       Result.Params:=Result.Params+' '+sl[i];
 
-    Result.Path:=Result.Path.Substring('shex:\\'.Length)
+    Result.Path:=Result.Path.Substring('shex:\\'.Length);
+    if Result.Path.EndsWith('/') then
+      Result.Path:=copy(Result.Path, 0, Result.Path.Length-1);
+
   finally
     FreeAndNil(sl);
   end;
@@ -93,6 +96,10 @@ end;
 
 procedure TCommandHandler.Shex(parsed: TParsedCmdLine);
 begin
+  Writeln(Format(
+  'executing Path: %s ;Params: %s ;IsLocateQuery: %s',
+    [parsed.Path, parsed.Params, BoolToStr(parsed.IsLocateQuery, True)]
+    ));
   Winapi.ShellApi.ShellExecute(0, nil, pChar(parsed.Path), pChar(parsed.Params), nil, SW_NORMAL);
 end;
 
