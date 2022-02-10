@@ -62,6 +62,8 @@ begin
     Result.Path:=sl[1];
     for I := 2 to sl.Count-1 do
       Result.Params:=Result.Params+' '+sl[i];
+
+    Result.Path:=Result.Path.Substring('shex:\\'.Length)
   finally
     FreeAndNil(sl);
   end;
