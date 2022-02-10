@@ -74,7 +74,8 @@ end;
 
 procedure TCommandHandler.tcLocate(parsed: TParsedCmdLine);
 begin
-  parsed.Params:=parsed.Path;
+  //E:\drbVsev\Dropbox\programs\totalcmd8\TOTALCMD.EXE /O /R=D:\test.txt
+  parsed.Params:='/O /R='+parsed.Path.Replace('/', '\');
   parsed.Path:='E:\drbVsev\Dropbox\programs\totalcmd8\TOTALCMD.EXE';
   Shex(parsed);
 end;
