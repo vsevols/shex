@@ -26,6 +26,7 @@ uses
 var
   handler: ICommandHandler;
   freezeAfterFinish: Boolean;
+  userInput: string;
 begin
   try
     WriteLn('received: '+CmdLine);
@@ -33,13 +34,15 @@ begin
     handler:=TCommandHandler.Create;
     handler.Process(CmdLine);
     freezeAfterFinish:=FileExists(ExtractFilePath(ParamStr(0))+'.freezeAfterFinish=True');
-    //TODO:
-    //WriteLn('type "config" or Enter to exit');
-    //if Readln.LowerCase='config' then
-    //  handler.locateConfig();
-
     if freezeAfterFinish then
+    begin
+      WriteLn('type "c" to config or Enter to exit');
+      Read(userInput);
+      if LowerCase(userInput)='c' then
+        handler.LocateConfig(ParamStr(0));
+
       ReadLn;
+    end;
   except
     on E: Exception do
     begin

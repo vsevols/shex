@@ -7,6 +7,7 @@ uses
 
 type
   ICommandHandler = interface(IInterface)
+    procedure LocateConfig(APath: string); stdcall;
     procedure Process(CmdLine: string); stdcall;
   end;
 
@@ -20,10 +21,13 @@ type
 
   TCommandHandler = class(TInterfacedObject, ICommandHandler)
     procedure Process(CmdLine: string); stdcall;
+  strict private
+    procedure LocateConfig(APath: string); stdcall;
+  private
+    procedure tcLocate(parsed: TParsedCmdLine); overload;
   public
     function ParseCmdLine(CmdLine: string): TParsedCmdLine;
     procedure Shex(parsed: TParsedCmdLine);
-    procedure tcLocate(parsed: TParsedCmdLine);
   end;
 
 
@@ -32,6 +36,14 @@ implementation
 uses
   Winapi.ShellAPI, Winapi.Windows, System.WideStrings,
   System.Classes;
+
+procedure TCommandHandler.LocateConfig(APath: string);
+var
+ parsed: TParsedCmdLine;
+begin
+  parsed.Path:=APath;
+  tcLocate(parsed);
+end;
 
 procedure TCommandHandler.Process(CmdLine: string);
 var
