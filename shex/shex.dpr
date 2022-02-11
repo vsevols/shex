@@ -17,6 +17,12 @@ uses
     shex://x:\programs\shex?
 }
 
+//TODO: implement command:
+//* manual deploying
+//shex://lr?d:\Git\shex\shex&x:\programs\shex
+//- split by ? and &
+//lr handler: lr.exe or tcSetLeftRightTabs(parsedCmdLine.Params)
+
 var
   handler: ICommandHandler;
   freezeAfterFinish: Boolean;
@@ -27,6 +33,11 @@ begin
     handler:=TCommandHandler.Create;
     handler.Process(CmdLine);
     freezeAfterFinish:=FileExists(ExtractFilePath(ParamStr(0))+'.freezeAfterFinish=True');
+    //TODO:
+    //WriteLn('type "config" or Enter to exit');
+    //if Readln.LowerCase='config' then
+    //  handler.locateConfig();
+
     if freezeAfterFinish then
       ReadLn;
   except
