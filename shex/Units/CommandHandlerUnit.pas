@@ -72,6 +72,7 @@ begin
   sl:=TStringList.Create;
   try
     CmdLine:=CmdLine.Replace('"', '');
+    CmdLine:=CmdLine.Replace('%5C', '\');
 
     if CmdLine.Contains('shex://shex://') then
       IsRecursivePath:=True
