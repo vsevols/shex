@@ -73,6 +73,9 @@ begin
   try
     CmdLine:=CmdLine.Replace('"', '');
     CmdLine:=CmdLine.Replace('%5C', '\');
+    if CmdLine.EndsWith('/') then
+      CmdLine := Copy(CmdLine, 1, Length(CmdLine) - 1);
+
 
     if CmdLine.Contains('shex://shex://') then
       IsRecursivePath:=True
